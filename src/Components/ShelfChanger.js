@@ -23,7 +23,7 @@ class ShelfChanger extends Component {
                     }}
                     defaultValue={current}
                 >
-                    <option value="none" disabled>Move to...</option>
+                    <option disabled>Move to...</option>
                     {shelves.map((category)=>{
                         return (<option key={category.value} value={category.value} >{category.text}</option>)
                     })

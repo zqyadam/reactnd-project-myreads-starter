@@ -14,15 +14,12 @@ class SearchPage extends Component {
 
         let query = event.target.value;
 
-        search(query.trim()).then((results) => {
-            if (!Array.isArray(results)) {
-                return
-            }
-            console.log('====================================');
-            console.log(results);
-            console.log('====================================');
+        search(query.trim()).then((books) => {
+            if (!Array.isArray(books)) return;
+            books.forEach(this.setBookShelf);
+
             this.setState({
-                books: results
+                books: books
             })
         }).catch((error) => {
             console.log('search error')
@@ -36,9 +33,21 @@ class SearchPage extends Component {
 
             if (this.props.addBook) {
                 this.props.addBook(book)
-                alert('Add to '+shelf)
+                alert('Add to ' + shelf)
             }
         })
+    }
+
+    setBookShelf = (book) => {
+        const { shelfBooks } = this.props;
+        for (let shelfBook of shelfBooks) {
+            console.log(shelfBook)
+            if (shelfBook.id === book.id) {
+                book.shelf = shelfBook.shelf;
+                return ;
+            }
+        }
+        book.shelf = 'none';
     }
 
     render() {
@@ -50,20 +59,11 @@ class SearchPage extends Component {
                 <div className="search-books-bar">
                     <Link className="close-search" to='/'>Close</Link>
                     <div className="search-books-input-wrapper">
-                        {/*
-                        NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                        You can find these search terms here:
-                        https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                        However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                        you don't find a specific author or title. Every search is limited by search terms.
-                        */}
                         <input
                             type="text"
                             placeholder="Search by title or author"
                             onChange={this.handleSearch}
                         />
-
                     </div>
                 </div>
                 <div className="search-books-results">
@@ -72,7 +72,7 @@ class SearchPage extends Component {
                             books.length !== 0 && books.map((book) => {
                                 return (
                                     <li key={book.id}>
-                                        <BookItem book={book} onShelfChange={this.addToShelf}/>
+                                        <BookItem book={book} onShelfChange={this.addToShelf} />
                                     </li>
                                 )
                             })

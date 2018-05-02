@@ -97,7 +97,7 @@ class BooksApp extends React.Component {
 
         <Route path="/search" render={() => {
           return (
-            <SearchPage addBook={this.handleAddBook} />
+            <SearchPage addBook={this.handleAddBook} shelfBooks={books}/>
           )
         }}
 
